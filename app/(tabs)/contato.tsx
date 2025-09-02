@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 //npx expo install react-native-toast-message
+//npm install react-native-toast-message
+
 
 import {
   View,

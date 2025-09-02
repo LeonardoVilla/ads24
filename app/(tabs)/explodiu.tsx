@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { Pessoa } from '../../src/models/Pessoa'; 
+//npm install @supabase/supabase-js
+
+
 import {
     ImageBackground,
     SafeAreaView,
@@ -12,11 +16,16 @@ export default function App() {
     const [campoNome, setNome] = useState('');
     const [campoTelefone, setTlelefone] = useState('');
 
-    const nome = campoNome;
-    const telefone = Number(campoTelefone);
+    const pessoa = new Pessoa(campoNome, campoTelefone); //com objeto da classe Obs: Não é algo usual por quem programa em react
+
+    const dados = { //sem objeto da classe
+        nome: campoNome,
+        telefone: Number(campoTelefone),
+    };
 
     const enviarDados = () => {
-        window.alert(nome + telefone*5);
+        window.alert(dados.nome + dados.telefone * 5);
+        window.alert(pessoa.nome + pessoa.telefone * 5);
     };
 
     return (
@@ -34,7 +43,7 @@ export default function App() {
                     style={styles.input}
                 />
                 <TextInput
-                    placeholder="Informe seu Nome"
+                    placeholder="Informe seu telefone"
                     value={campoTelefone}
                     onChangeText={setTlelefone}
                     keyboardType="numeric"
