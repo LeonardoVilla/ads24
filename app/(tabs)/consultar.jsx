@@ -1,29 +1,18 @@
-import { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "https://npreacgqgogxwsjqyqdz.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wcmVhY2dxZ29neHdzanF5cWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyNTA4NDUsImV4cCI6MjA3MTgyNjg0NX0.3OIZqqf1b6ErgLvGBv_2DgfmM-gKbZoj6VEbm5CVkA8";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { useState, useCallback } from "react";
+import { SafeAreaView, FlatList, View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { supabase } from "../../src/supabaseClient";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ConsultaPessoas() {
   const [pessoas, setPessoas] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
-  // Carregar os dados do Supabase
   const carregarPessoas = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("pessoas").select("*").order("id", { ascending: false });
+    const { data, error } = await supabase
+      .from("pessoas")
+      .select("*")
+      .order("id", { ascending: false });
 
     if (error) {
       console.error("Erro ao buscar dados:", error.message);
@@ -33,9 +22,11 @@ export default function ConsultaPessoas() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    carregarPessoas();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      carregarPessoas();
+    }, [])
+  );
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
@@ -48,6 +39,8 @@ export default function ConsultaPessoas() {
     <SafeAreaView style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#007AFF" />
+      ) : pessoas.length === 0 ? (
+        <Text style={styles.semDados}>Nenhuma pessoa cadastrada.</Text>
       ) : (
         <FlatList
           data={pessoas}
@@ -61,13 +54,8 @@ export default function ConsultaPessoas() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F4F6F8",
-  },
-  lista: {
-    padding: 16,
-  },
+  container: { flex: 1, backgroundColor: "#F4F6F8" },
+  lista: { padding: 16 },
   card: {
     backgroundColor: "#fff",
     padding: 16,
@@ -79,13 +67,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-  nome: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 6,
-  },
-  telefone: {
-    fontSize: 16,
-    color: "#666",
-  },
+  nome: { fontSize: 18, fontWeight: "bold", marginBottom: 6 },
+  telefone: { fontSize: 16, color: "#666" },
+  semDados: { textAlign: "center", marginTop: 50, fontSize: 16, color: "#666" },
 });
