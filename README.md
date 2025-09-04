@@ -54,4 +54,5 @@ Join our community of developers creating universal apps.
 # npx expo install react-native-toast-message
 # npm install react-native-toast-message
 # npm install @supabase/supabase-js
+# npm install react-native-elements react-native-vector-icons
 # npx expo install expo-env
